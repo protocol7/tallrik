@@ -1,5 +1,11 @@
-﻿{slab player}
+﻿﻿{slab player}
 <div class="player">
+	<div class="perform-settings">Performing: 
+		<a href="#" class="perform-soon">Next X hours</a> | 
+		<a href="#" class="perform-thursday">Thursday</a> | 
+		<a href="#" class="perform-friday">Friday</a> | 
+		<a href="#" class="perform-saturday">Saturday</a>
+	</div>
 	<div class="now-playing-container"></div>
 	<div class="control-buttons"><a href="#" class="play-button">►</a><a href="#" class="skip-button">►►</a></div>
 	<div class="tuner-container"></div>

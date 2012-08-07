@@ -1,5 +1,4 @@
-﻿
-var sp = getSpotifyApi(1);
+﻿var sp = getSpotifyApi(1);
 
 var templates = {
   "layout": null,
@@ -41,6 +40,20 @@ var getFestivalInfo = function(track) {
     endTime: artist.gig_end,
     due: getDueTime(artist.gig_start)
   }
+}
+
+var getArtistsInTimespan = function(startTime, endTime) {
+	var start = new Date(startTime);
+	var end = new Date(endTime);
+	console.log(artists);
+	var list = new Array;
+	for (var artist in artists) {
+		var gigStart = new Date(artists[artist].gig_start);
+		if (gigStart > start && gigStart <= end) {
+			list.push(artist);
+		}
+	}
+	return list;
 }
 
 var loadTuner = function(container) {
@@ -166,7 +179,6 @@ var loadRecommendedArtists = function(container) {
   container.html(html)
 }
 
-
 exports.init = function () {
 
   sp.require("scripts/jquery-1.7.2.min");
@@ -199,14 +211,15 @@ exports.init = function () {
       });
     }).error(function() { alert("Error loading venue data."); }));
 
-    defs.push($.getJSON('http://localhost:9999/' + "foo" /*sp.core.user.canonicalUsername*/, function(data) {
-      recommendedArtists = data;
-    }).error(function() { alert("Error loading recomended artists data."); }));
-
     $.when.apply($, defs).done(function() {
       var layout = $(templates["layout"].main());
       $("body").append(layout);
       //models.player.play(playlist.tracks[0]);
+	  
+	  defs.push($.getJSON('http://localhost:9999/' + "foo" /*sp.core.user.canonicalUsername*/, function(data) {
+	    recommendedArtists = data;
+	  }));
+	  
       loadPlayer($(".player-container", layout));
 
     });
