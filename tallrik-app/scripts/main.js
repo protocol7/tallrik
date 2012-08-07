@@ -21,7 +21,7 @@ var getNextTrack = function() {
 var getFestivalInfo = function(track) {
   var artistName = track.data.artists[0].name.toLowerCase();
   var artist = artists[artistName];
-  
+  if(artist == undefined) return undefined;
   return {
     scene: venues[artist.venueID],
     startTime: artist.gig_start,
@@ -82,10 +82,14 @@ var loadNowPlaying = function(container, track) {
 
 var loadPlayer = function(container) {
   var player = $(templates["player"].player());
-  var track = getNextTrack();
+  var playerPlaylist = new models.Playlist();
+  playerPlaylist.add(getNextTrack());
+  playerPlaylist.add(getNextTrack());
+  var track = playerPlaylist.tracks[0];
+  console.dir(track);
   loadNowPlaying($(".now-playing-container", player), track);
   $(".play-button", player).click(function() {
-    models.player.play(track);
+    models.player.play(track, playerPlaylist);
     return false;
   });
   loadTuner($(".tuner-container", player));
