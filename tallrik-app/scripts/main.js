@@ -76,8 +76,17 @@ var getDueTime = function(startTime) {
 var loadNowPlaying = function(container, track) {
   exports.t = container;
   var festivalInfo = getFestivalInfo(track);
-  var nowPlaying = $(templates["player"].nowPlaying({ image: track.image, artist: track.artists[0].name, title: track.name, scene: festivalInfo.scene, due: festivalInfo.due }));
-  container.html(nowPlaying);
+  if(festivalInfo == undefined) container.html("Click play to start listening to Way Out West music!");
+  else {
+    var nowPlaying = $(templates["player"].nowPlaying({ 
+      image: track.image, 
+      artist: track.artists[0].name,
+      title: track.name,
+      scene: festivalInfo.scene, 
+      due: festivalInfo.due 
+    }));
+    container.html(nowPlaying);
+  }
 }
 
 var loadPlayer = function(container) {
