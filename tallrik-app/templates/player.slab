@@ -16,13 +16,16 @@
 <div class="now-playing">
 	<div class="scene-info">On <div class="emp">{scene}</div> in <div class="emp">{due}</div>:</div>
 	<div class="border"></div>
-	<div class="content">
-		<div class="background" style="background: url('{image2}') center center"></div>
-		<div class="background-dimmer"></div>
-		<img src="{image}" class='track-image'>
-	</div>
+	<div class="image-container"></div>
 	<div class="border"></div>
 	<a href="{artistUri}" class='artist'>{artist}</a>
 	<div class='title'>{title}</div>
+</div>
+{endslab}
+{slab nowPlayingImage}
+<div class="now-playing-image">
+	<div class="background" style="background: url('{image2}') center center"></div>
+	<div class="background-dimmer"></div>
+	<img src="{image}" class='track-image'>
 </div>
 {endslab}

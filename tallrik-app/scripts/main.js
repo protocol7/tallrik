@@ -38,7 +38,8 @@ var getFestivalInfo = function(track) {
     scene: venues[artist.venueID],
     startTime: artist.gig_start,
     endTime: artist.gig_end,
-    due: getDueTime(artist.gig_start)
+    due: getDueTime(artist.gig_start),
+    artist: artist
   }
 }
 
@@ -104,17 +105,26 @@ var loadNowPlaying = function(container, track) {
   var festivalInfo = getFestivalInfo(track);
   if(festivalInfo == undefined) container.html("Cannot find '" + track.artists[0].name + "' in festival schema");
   else {
+    
     models.Artist.fromURI(track.artists[0].uri, function(artist) {
       
       var nowPlaying = $(templates["player"].nowPlaying({ 
-        image: artist.image, 
-        image2: track.image,
         artist: track.artists[0].name,
         artistUri: artist.uri,
         title: track.name,
         scene: festivalInfo.scene, 
         due: festivalInfo.due 
       }));
+      
+      $.get(festivalInfo.artist.wow_URL, function(data) {
+        var d = $(data);
+        exports.d = d;
+        var img = $(".imagefield", d)[0].src;
+        $(".image-container", nowPlaying).html(templates["player"].nowPlayingImage({          
+          image: img, 
+          image2: track.image,
+        }));
+      });
       container.empty();
       container.append(nowPlaying);
     });
@@ -129,23 +139,26 @@ var loadPlayer = function(container) {
     getNextTrack(function(track3) { 
       playerPlaylist.add(track3); 
       
-      var track = playerPlaylist.tracks[0];
-      console.dir(track);
-      loadNowPlaying($(".now-playing-container", player), track);
+      var nowPlayingTrack = playerPlaylist.tracks[0];
+      console.dir(nowPlayingTrack);
+      loadNowPlaying($(".now-playing-container", player), nowPlayingTrack);
       $(".play-button", player).click(function() {
-        models.player.play(track, playerPlaylist);
+        models.player.play(nowPlayingTrack, playerPlaylist);
         return false;
       });
       $(".skip-button", player).click(function() {
-        models.player.next();
+        if(models.player.track != undefined && models.player.track.uri == nowPlayingTrack.uri)
+          models.player.next();
         return false;
       });
       loadTuner($(".tuner-container", player));
       models.player.observe(models.EVENT.CHANGE, function(event) {
-        loadNowPlaying($(".now-playing-container", player), models.player.track);
         getNextTrack(function(track) { 
           playerPlaylist.add(track);
         });
+        if(models.player.track != undefined && models.player.track.uri == nowPlayingTrack.uri) return;
+        nowPlayingTrack = models.player.track;
+        loadNowPlaying($(".now-playing-container", player), models.player.track);
       });
       container.empty();
       container.append(player);
@@ -197,11 +210,7 @@ exports.init = function () {
 	defs.push($.get('http://apps.wayoutwest.se/wow-phone-app/2012/desktop/artists.php', function(data) {
       artists = {};
       $.map(data, function(a, _) {
-        artists[a.title.toLowerCase()] = {
-          gig_start: a.gig_start,
-          gig_end: a.gig_end,
-          venueID: a.venueID
-        };
+        artists[a.title.toLowerCase()] = a;
       });
     }).error(function() { alert("Error loading artist data."); }));
     defs.push($.get('http://apps.wayoutwest.se/wow-phone-app/2012/desktop/venues.php', function(data) {
