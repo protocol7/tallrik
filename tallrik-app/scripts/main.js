@@ -32,6 +32,25 @@ var getFestivalInfo = function(track) {
 
 var loadTuner = function(container) {
   var tuner = $(templates["tuner"].main());
+  var dropPlaylistArea = $(".dropper", tuner);
+  dropPlaylistArea.bind("dragover", function(e) {
+    e.preventDefault();
+    $(this).addClass("dragover");
+    return false;
+  });
+  dropPlaylistArea.bind("dragleave", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    $(this).removeClass("dragover");
+    return false;
+  });
+  dropPlaylistArea.bind("drop", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    $(this).removeClass("dragover");
+    // Drop stuff
+    return false;
+  });
   container.html(tuner);
 }
 
