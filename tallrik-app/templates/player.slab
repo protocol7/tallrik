@@ -7,7 +7,7 @@
 {endslab}
 {slab nowPlaying}
 <div class="now-playing">
-	<div class="scene-info">On {scene} in {due}:</div>
+	<div class="scene-info">On <div class="emp">{scene}</div> in <div class="emp">{due}</div>:</div>
 	<div class="border"></div>
 	<div class="content">
 		<div class="background" style="background: url('{image}') center center"></div>
