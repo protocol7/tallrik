@@ -126,32 +126,37 @@ public class ArtistsGraph {
     Map<String, Float> scoredWowArtists = new HashMap<String, Float>();
 
     List<ArtistWithScore> likedArtists = getUserLikedArtists(user);
-    int maxArtistsToMatch = Math.min(likedArtists.size(), 100);
-    for(int i = 0; i<maxArtistsToMatch; i++) {
-      Artist likedArtist = likedArtists.get(i).getArtist();
 
-      List<ArtistWithScore> similarWowArtists = getSimilarWowArtists(likedArtist);
+    if(likedArtists != null) {
+      int maxArtistsToMatch = Math.min(likedArtists.size(), 100);
+      for(int i = 0; i<maxArtistsToMatch; i++) {
+        Artist likedArtist = likedArtists.get(i).getArtist();
 
-      for(ArtistWithScore similarWowArtist : similarWowArtists) {
-        String artistName = similarWowArtist.getArtist().getName();
-        Float score = scoredWowArtists.get(artistName);
-        if(score == null) {
-          score = 0f;
+        List<ArtistWithScore> similarWowArtists = getSimilarWowArtists(likedArtist);
+
+        for(ArtistWithScore similarWowArtist : similarWowArtists) {
+          String artistName = similarWowArtist.getArtist().getName();
+          Float score = scoredWowArtists.get(artistName);
+          if(score == null) {
+            score = 0f;
+          }
+          score += similarWowArtist.getScore();
+
+          scoredWowArtists.put(artistName, score);
         }
-        score += similarWowArtist.getScore();
-
-        scoredWowArtists.put(artistName, score);
       }
+
+      List<ArtistWithScore> wowArtists = new ArrayList<ArtistWithScore>();
+      for(Entry<String, Float> entry : scoredWowArtists.entrySet()) {
+        wowArtists.add(new ArtistWithScore(entry.getKey(), entry.getValue()));
+      }
+
+      Collections.sort(wowArtists, ARTIST_WITH_SCORE_COMPARATOR);
+
+      return wowArtists;
+    } else {
+      return Collections.emptyList();
     }
-
-    List<ArtistWithScore> wowArtists = new ArrayList<ArtistWithScore>();
-    for(Entry<String, Float> entry : scoredWowArtists.entrySet()) {
-      wowArtists.add(new ArtistWithScore(entry.getKey(), entry.getValue()));
-    }
-
-    Collections.sort(wowArtists, ARTIST_WITH_SCORE_COMPARATOR);
-
-    return wowArtists;
   }
 
   public Node getOrAddUser(User user) {
