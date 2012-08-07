@@ -1,0 +1,33 @@
+{
+	"BundleType": "Application",
+	"BundleIdentifier": "tallrik",
+	"AppName": {
+		"en": "Tallrik"
+	},
+	"SupportedLanguages": [
+		"en"
+	],
+	"Dependencies": {
+		"api": "0.1.0"
+	},
+	"UserInstallable": false,
+	"ApiPermissions": {
+		"core" : ["private"],
+		"social" : ["private"],
+		"whatsnew" : ["private"]
+	},
+	"RequiredPermissions": [
+		"https://graph.facebook.com",
+		"https://fbcdn-profile-*.akamaihd.net",
+		"http://*.fbcdn.net",
+		"http://*.cloudfront.net",
+		"http://*.spotify.com"
+	],
+	"AcceptedLinkTypes": [
+		"playlist",
+		"artist"
+	],
+	"AcceptedViewDropTypes": [
+		"text"
+	]
+}
