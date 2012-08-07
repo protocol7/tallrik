@@ -97,6 +97,9 @@ var loadPlayer = function(container) {
     return false;
   });
   loadTuner($(".tuner-container", player));
+  models.player.observe(models.EVENT.CHANGE, function(event) {
+    loadNowPlaying($(".now-playing-container", player), models.player.track);
+  });
   container.html(player);
 }
 
