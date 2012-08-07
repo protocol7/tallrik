@@ -18,6 +18,7 @@
 	},
 	"RequiredPermissions": [
 		"https://graph.facebook.com",
+		"http://localhost:9999",
 		"https://fbcdn-profile-*.akamaihd.net",
 		"http://*.fbcdn.net",
 		"http://*.cloudfront.net",

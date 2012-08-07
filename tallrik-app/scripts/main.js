@@ -4,13 +4,16 @@ var sp = getSpotifyApi(1);
 var templates = {
   "layout": null,
   "player": null,
-  "tuner": null
+  "tuner": null,
+  "artists": null
 };
 
 var models;
 var artists;
 var venues;
+var recommendedArtists;
 
+var tempPlaylist = undefined;
 var getNextTrack = function(callback) {
   // Replace with code that looks up which artists are playing the nearest hours and get a 
   // random track by one of those artists and return it
@@ -68,7 +71,7 @@ var getDueTime = function(startTime) {
   var currentTime = new Date();
   var msDifference = new Date(startTime) - currentTime;
   var minutesLeft = Math.floor(msDifference / (1000 * 60)); // ms to even minutes
-  
+
   var returnString = '';
   if (minutesLeft >= 60) {
     var hoursLeft = Math.floor(minutesLeft / 60);
@@ -137,10 +140,35 @@ var loadPlayer = function(container) {
       });
   });
   
+  loadRecommendedArtists($(".recommended-artists-container", player))
 }
 
+var loadRecommendedArtists = function(container) {
+  var recArtistsNames = recommendedArtists.artists.slice(0, 5)
+  var html = $(templates["artists"].artists({"artists": recArtistsNames}));
+
+  $.each(recArtistsNames, function(index, artist) {
+      var div = $("div:nth-child(" + (index + 1) + ")", html)
+
+      var search = new models.Search("artist:" + artist.name, {"pageSize": 1, "searchAlbums": false, "searchTracks": false, "searchPlaylists": false})
+      search.observe(models.EVENT.CHANGE, function() {
+        search.artists.forEach(function(a) {
+          $(".rec-artist-name", div).text(a.data.name)
+          $("img", div).css("background-image", "url(" + a.data.portrait + ")")
+          $(div).click(function() {
+            window.location = a.data.uri
+          })
+        });
+      });
+      search.appendNext();
+  })
+
+  container.html(html)
+}
+
+
 exports.init = function () {
-  
+
   sp.require("scripts/jquery-1.7.2.min");
   sp.require("scripts/jquery-ui-1.8.21.custom.min");
   sp.require("scripts/less-1.3.0.min");
@@ -167,16 +195,20 @@ exports.init = function () {
     defs.push($.get('http://apps.wayoutwest.se/wow-phone-app/2012/desktop/venues.php', function(data) {
       venues = new Array;
       $.map(data.result, function(v, _) {
-        venues[v.ID] = v.title; 
+        venues[v.ID] = v.title;
       });
     }).error(function() { alert("Error loading venue data."); }));
-	
+
+    defs.push($.getJSON('http://localhost:9999/' + "foo" /*sp.core.user.canonicalUsername*/, function(data) {
+      recommendedArtists = data;
+    }).error(function() { alert("Error loading recomended artists data."); }));
+
     $.when.apply($, defs).done(function() {
       var layout = $(templates["layout"].main());
       $("body").append(layout);
       //models.player.play(playlist.tracks[0]);
       loadPlayer($(".player-container", layout));
+
     });
-    
   });
 }

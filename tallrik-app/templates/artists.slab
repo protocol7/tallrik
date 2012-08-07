@@ -1,0 +1,10 @@
+{slab artists}
+<div id="recommended-artists">
+  {each artist in artists}
+    <div>
+      <img src="" width=128 />
+    	<div class="rec-artist-name"></div>
+    </div>
+  {end}
+</div>
+{endslab}
