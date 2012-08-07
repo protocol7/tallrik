@@ -151,6 +151,7 @@ var loadPlayer = function(container) {
           models.player.next();
         return false;
       });
+      $(".perform-settings ul", player).selectable();
       loadTuner($(".tuner-container", player));
       models.player.observe(models.EVENT.CHANGE, function(event) {
         getNextTrack(function(track) { 
@@ -225,11 +226,15 @@ exports.init = function () {
       $("body").append(layout);
       //models.player.play(playlist.tracks[0]);
 	  
-	  defs.push($.getJSON('http://localhost:9999/' + "foo" /*sp.core.user.canonicalUsername*/, function(data) {
-	    recommendedArtists = data;
-	  }));
+      $.getJSON('http://172.21.113.142:9999/' + "foo" /*sp.core.user.canonicalUsername*/, function(data) {
+        recommendedArtists = data;
+        console.log("Gogogs");
+        loadPlayer($(".player-container", layout));
+      }).error(function(e) { 
+        console.log("Error: " + e);
+        loadPlayer($(".player-container", layout));
+      });
 	  
-      loadPlayer($(".player-container", layout));
 
     });
   });

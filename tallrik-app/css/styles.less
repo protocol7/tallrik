@@ -61,10 +61,27 @@ body {
 		height: 5px;
 	}
 	.perform-settings {
-		color: #000000;
+		color: #555555;
 		text-align: left;
 		font-size: 14px;
-		margin-bottom: 10px;
+		margin-bottom: 20px;
+		border-radius: 5px;
+		background: rgba(0, 0, 0, 0.2);
+		padding: 5px;
+		ul {
+			display: inline-block;
+			li {
+				display: inline-block;
+				color: #333333;
+				margin-left: 5px;
+				margin-right: 5px;
+				cursor: pointer;
+				&.ui-selected {
+					font-weight: bold;
+					color: #000000;
+				}
+			}
+		}
 	}
 	.choosen-artists {
 		text-align: left;
@@ -112,7 +129,7 @@ body {
 				font-size: 30px;
 				height: 30px;
 				margin-top: 10px;
-				display: inline-block;
+				display: block;
 				background:  -webkit-linear-gradient(-45deg, #c183b2 0%,#842b4f 25%,#752201 28%,#7c4501 45%,#1932d6 48%,#15a5b5 53%,#2ab215 55%,#bf6e4e 100%);
 				-webkit-background-clip: text;
 				-webkit-text-fill-color: transparent;
