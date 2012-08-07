@@ -62,6 +62,40 @@ var loadTuner = function(container) {
     e.preventDefault();
     $(this).removeClass("dragover");
     // Drop stuff
+    var droppedURL = e.originalEvent.dataTransfer.getData("text")
+
+    if(droppedURL.indexOf("playlist") == -1) {
+      console.log("Only playlists supported");
+      return false;
+    }
+
+    models.Playlist.fromURI(droppedURL, function(playlist) {
+      var artists = {}
+      $.each(playlist.tracks, function(i, track) {
+        $.each(track.artists, function(j, artist) {
+          artists[artist.name] = 1
+        })
+      })
+
+      artists = $.map(artists, function(i, a) { return {"name":a} })
+
+      $.ajax({
+        url: "http://localhost:9999/" + sp.core.user.canonicalUsername,
+        data: JSON.stringify({"artists": artists}),
+        processData: false,
+        contentType: "application/json",
+        type: "POST",
+        success:function(a) {
+          // reload recommended artists
+          $.getJSON('http://localhost:9999/' + sp.core.user.canonicalUsername, function(data) {
+            recommendedArtists = data;
+            loadRecommendedArtists($(".recommended-artists-container", $(".player")))
+          })
+        },
+        error:function() { console.log("Failed to upload favorite artists")}
+      });
+    });
+
     return false;
   });
   container.html(tuner);
@@ -199,7 +233,7 @@ exports.init = function () {
       });
     }).error(function() { alert("Error loading venue data."); }));
 
-    defs.push($.getJSON('http://localhost:9999/' + "foo" /*sp.core.user.canonicalUsername*/, function(data) {
+    defs.push($.getJSON('http://localhost:9999/' + sp.core.user.canonicalUsername, function(data) {
       recommendedArtists = data;
     }).error(function() { alert("Error loading recomended artists data."); }));
 
