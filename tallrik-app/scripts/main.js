@@ -11,11 +11,21 @@ var models;
 var artists;
 var venues;
 
-var tempPlaylist = undefined;
-var getNextTrack = function() {
+var getNextTrack = function(callback) {
   // Replace with code that looks up which artists are playing the nearest hours and get a 
   // random track by one of those artists and return it
-  return tempPlaylist.tracks[Math.floor(Math.random()*tempPlaylist.length)];
+  getTopTrackForArtist("Rambling Nicholas Heron", function(tracks) {
+    callback(tracks[Math.floor(Math.random()*tracks.length)]);
+  });
+}
+
+var getTopTrackForArtist = function(artistName, callback) {
+  var search = new models.Search(artistName);
+  search.localResults = models.LOCALSEARCHRESULTS.APPEND;
+  search.observe(models.EVENT.CHANGE, function() {
+    callback(search.tracks);
+  });
+  search.appendNext();
 }
 
 var getFestivalInfo = function(track) {
@@ -76,40 +86,57 @@ var getDueTime = function(startTime) {
 var loadNowPlaying = function(container, track) {
   exports.t = container;
   var festivalInfo = getFestivalInfo(track);
-  if(festivalInfo == undefined) container.html("Click play to start listening to Way Out West music!");
+  if(festivalInfo == undefined) container.html("Cannot find '" + track.artists[0].name + "' in festival schema");
   else {
-    var nowPlaying = $(templates["player"].nowPlaying({ 
-      image: track.image, 
-      artist: track.artists[0].name,
-      title: track.name,
-      scene: festivalInfo.scene, 
-      due: festivalInfo.due 
-    }));
-    container.html(nowPlaying);
+    models.Artist.fromURI(track.artists[0].uri, function(artist) {
+      
+      var nowPlaying = $(templates["player"].nowPlaying({ 
+        image: artist.image, 
+        image2: track.image,
+        artist: track.artists[0].name,
+        artistUri: artist.uri,
+        title: track.name,
+        scene: festivalInfo.scene, 
+        due: festivalInfo.due 
+      }));
+      container.empty();
+      container.append(nowPlaying);
+    });
   }
 }
 
 var loadPlayer = function(container) {
   var player = $(templates["player"].player());
   var playerPlaylist = new models.Playlist();
-  playerPlaylist.add(getNextTrack());
-  playerPlaylist.add(getNextTrack());
-  var track = playerPlaylist.tracks[0];
-  console.dir(track);
-  loadNowPlaying($(".now-playing-container", player), track);
-  $(".play-button", player).click(function() {
-    models.player.play(track, playerPlaylist);
-    return false;
+  getNextTrack(function(track2) { 
+    playerPlaylist.add(track2);
+    getNextTrack(function(track3) { 
+      playerPlaylist.add(track3); 
+      
+      var track = playerPlaylist.tracks[0];
+      console.dir(track);
+      loadNowPlaying($(".now-playing-container", player), track);
+      $(".play-button", player).click(function() {
+        models.player.play(track, playerPlaylist);
+        return false;
+      });
+      $(".skip-button", player).click(function() {
+        models.player.next();
+        return false;
+      });
+      loadTuner($(".tuner-container", player));
+      models.player.observe(models.EVENT.CHANGE, function(event) {
+        loadNowPlaying($(".now-playing-container", player), models.player.track);
+        getNextTrack(function(track) { 
+          playerPlaylist.add(track);
+        });
+      });
+      container.empty();
+      container.append(player);
+      
+      });
   });
-  $(".skip-button", player).click(function() {
-    models.player.next();
-    return false;
-  });
-  loadTuner($(".tuner-container", player));
-  models.player.observe(models.EVENT.CHANGE, function(event) {
-    loadNowPlaying($(".now-playing-container", player), models.player.track);
-  });
-  container.html(player);
+  
 }
 
 exports.init = function () {
@@ -147,8 +174,6 @@ exports.init = function () {
     $.when.apply($, defs).done(function() {
       var layout = $(templates["layout"].main());
       $("body").append(layout);
-      tempPlaylist = models.Playlist.fromURI("spotify:user:wayoutwestfestival:playlist:1VkQ6nbfU4gKjsPjqwE2kZ");
-      exports.playlist = tempPlaylist;
       //models.player.play(playlist.tracks[0]);
       loadPlayer($(".player-container", layout));
     });
