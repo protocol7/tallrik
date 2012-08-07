@@ -1,11 +1,10 @@
 ﻿﻿{slab player}
 <div class="player">
-	<div class="perform-settings">Performing: 
+	<div class="artist-selection">Selection: 
 		<ul>
-		<li class="perform-soon">Next X hours</li> |
-		<li class="perform-thursday">Thursday</li> |
-		<li class="perform-friday">Friday</li> |
-		<li class="perform-saturday">Saturday</li>
+		<li data-selection="thursday" class="ui-selected">Thursday</li> |
+		<li data-selection="friday">Friday</li> |
+		<li data-selection="saturday">Saturday</li>
 		</ul>
 	</div>
 	<div class="now-playing-container"></div>

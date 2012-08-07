@@ -13,13 +13,28 @@ var models;
 var artists;
 var venues;
 var recommendedArtists;
+var trackToArtists = {}
 
 var tempPlaylist = undefined;
 var getNextTrack = function(callback) {
-  // Replace with code that looks up which artists are playing the nearest hours and get a 
-  // random track by one of those artists and return it
-  getTopTrackForArtist("Rambling Nicholas Heron", function(tracks) {
-    callback(tracks[Math.floor(Math.random()*tracks.length)]);
+  var sel = $(".artist-selection .ui-selected").data("selection");
+  var artists;
+  if(sel == "thursday" || sel == undefined) {
+    artists = getArtistsInTimespan("2012-08-09 08:00", "2012-08-10 08:00");
+  } else if(sel == "friday") {
+    artists = getArtistsInTimespan("2012-08-10 08:00", "2012-08-11 08:00");
+  } else if(sel == "saturday") {
+    artists = getArtistsInTimespan("2012-08-11 08:00", "2012-08-12 08:00");
+  }
+  var artist = artists[Math.floor(Math.random()*artists.length)];
+  getTopTrackForArtist(artist, function(tracks) {
+    if(tracks.length == 0) {
+      getNextTrack(callback);
+      return;
+    }
+    var track = tracks[Math.floor(Math.random()*tracks.length)];
+    trackToArtists[track.uri] = artist;
+    callback(track);
   });
 }
 
@@ -33,7 +48,7 @@ var getTopTrackForArtist = function(artistName, callback) {
 }
 
 var getFestivalInfo = function(track) {
-  var artistName = track.data.artists[0].name.toLowerCase();
+  var artistName = trackToArtists[track.uri];
   var artist = artists[artistName];
   if(artist == undefined) return undefined;
   return {
@@ -48,7 +63,6 @@ var getFestivalInfo = function(track) {
 var getArtistsInTimespan = function(startTime, endTime) {
 	var start = new Date(startTime);
 	var end = new Date(endTime);
-	console.log(artists);
 	var list = new Array;
 	for (var artist in artists) {
 		var gigStart = new Date(artists[artist].gig_start);
@@ -142,11 +156,9 @@ var loadNowPlaying = function(container, track) {
   if(festivalInfo == undefined) container.html("Cannot find '" + track.artists[0].name + "' in festival schema");
   else {
     
-    models.Artist.fromURI(track.artists[0].uri, function(artist) {
-      
       var nowPlaying = $(templates["player"].nowPlaying({ 
-        artist: track.artists[0].name,
-        artistUri: artist.uri,
+        artist: trackToArtists[track.uri],
+        artistUri: track.artists[0].uri,
         title: track.name,
         scene: festivalInfo.scene, 
         due: festivalInfo.due 
@@ -163,50 +175,70 @@ var loadNowPlaying = function(container, track) {
       });
       container.empty();
       container.append(nowPlaying);
-    });
   }
 }
 
 var loadPlayer = function(container) {
   var player = $(templates["player"].player());
   var playerPlaylist = new models.Playlist();
-  getNextTrack(function(track2) { 
+  
+  var refreshTracks = function(callback) {
+    for(var i=playerPlaylist.length - 1; i >= 0; i--) {
+      if(models.player.track != null && models.player.track.uri != playerPlaylist.tracks[i].uri) {
+        playerPlaylist.remove(playerPlaylist.tracks[i]);
+      }
+    }
+    if(playerPlaylist.length < 2) {
+      getNextTrack(function(track) {
+        playerPlaylist.add(track);
+        callback();
+      });
+    } else { callback(); }
+  }
+  
+  $(".play-button", player).click(function() {
+    models.player.play(playerPlaylist.tracks[0], playerPlaylist);
+    return false;
+  });
+  $(".skip-button", player).click(function() {
+    if(models.player.track != undefined)
+      models.player.next();
+    return false;
+  });
+  $(".artist-selection ul", player).selectable();
+      
+  container.empty();
+  container.append(player);
+  getNextTrack(function(track2) {
     playerPlaylist.add(track2);
     getNextTrack(function(track3) { 
       playerPlaylist.add(track3); 
       
       var nowPlayingTrack = playerPlaylist.tracks[0];
-      console.dir(nowPlayingTrack);
-      loadNowPlaying($(".now-playing-container", player), nowPlayingTrack);
-      $(".play-button", player).click(function() {
-        models.player.play(nowPlayingTrack, playerPlaylist);
-        return false;
-      });
-      $(".skip-button", player).click(function() {
-        if(models.player.track != undefined && models.player.track.uri == nowPlayingTrack.uri)
-          models.player.next();
-        return false;
-      });
-      $(".perform-settings ul", player).selectable();
+      loadNowPlaying($(".now-playing-container", player), playerPlaylist.tracks[0]);
       loadTuner($(".tuner-container", player));
       models.player.observe(models.EVENT.CHANGE, function(event) {
-        getNextTrack(function(track) { 
-          playerPlaylist.add(track);
+        refreshTracks(function() {
+        
+          if(models.player.track != undefined && models.player.track.uri == nowPlayingTrack.uri) return;
+          nowPlayingTrack = models.player.track;
+          loadNowPlaying($(".now-playing-container", player), models.player.track);
         });
-        if(models.player.track != undefined && models.player.track.uri == nowPlayingTrack.uri) return;
-        nowPlayingTrack = models.player.track;
-        loadNowPlaying($(".now-playing-container", player), models.player.track);
       });
-      container.empty();
-      container.append(player);
       
       });
   });
   
-  loadRecommendedArtists($(".recommended-artists-container", player))
+  $.getJSON(server + sp.core.user.canonicalUsername, function(data) {
+    recommendedArtists = data;
+    loadRecommendedArtists($(".recommended-artists-container", player));
+  }).error(function(e) { 
+    console.log("Error: " + e);
+  });
 }
 
 var loadRecommendedArtists = function(container) {
+  if(recommendedArtists == undefined) return;
   var recArtistsNames = recommendedArtists.artists.slice(0, 5)
   var html = $(templates["artists"].artists({"artists": recArtistsNames}));
 
@@ -258,19 +290,12 @@ exports.init = function () {
     }).error(function() { alert("Error loading venue data."); }));
 
     $.when.apply($, defs).done(function() {
+      console.log("Loading layout");
       var layout = $(templates["layout"].main());
       $("body").append(layout);
       //models.player.play(playlist.tracks[0]);
-	  
-      $.getJSON(server + sp.core.user.canonicalUsername, function(data) {
-        recommendedArtists = data;
-        console.log("Gogogs");
-        loadPlayer($(".player-container", layout));
-      }).error(function(e) {
-        console.log("Error: ");
-        console.log(e);
-        loadPlayer($(".player-container", layout));
-      });
+      
+      loadPlayer($(".player-container", layout));
 	  
 
     });
