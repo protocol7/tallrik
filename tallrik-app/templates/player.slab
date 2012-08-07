@@ -1,7 +1,7 @@
 ﻿{slab player}
 <div class="player">
 	<div class="now-playing-container"></div>
-	<a href="#" class="play-button">►</a>
+	<div class="control-buttons"><a href="#" class="play-button">►</a><a href="#" class="skip-button">►►</a></div>
 	<div class="tuner-container"></div>
 </div>
 {endslab}

@@ -92,6 +92,10 @@ var loadPlayer = function(container) {
     models.player.play(track, playerPlaylist);
     return false;
   });
+  $(".skip-button", player).click(function() {
+    models.player.next();
+    return false;
+  });
   loadTuner($(".tuner-container", player));
   container.html(player);
 }
