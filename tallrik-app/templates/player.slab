@@ -1,0 +1,9 @@
+{slab player}
+<div class="player">
+	<div class="now-playing-container"></div>
+	<a href="#" class="play-button">Play</a>
+</div>
+{endslab}
+{slab nowPlaying}
+<div class="now-playing"><img src="{image}">{artist} - {title}</div>
+{endslab}

@@ -3,8 +3,43 @@ var sp = getSpotifyApi(1);
 
 var templates = {
   "layout": null,
+  "player": null
 };
 
+var models;
+
+var i=0;
+var tempPlaylist = undefined;
+var getNextTrack = function() {
+  // Replace with code that looks up which artists are playing the nearest hours and get a random track by one of those artists and return it
+  return exports.playlist.tracks[i++];
+}
+
+var getFestivalInfo = function(track) {
+  return {
+    scene: "Azalea",
+    startTime: "17:30",
+    endTime: "19:00"
+  }
+}
+
+var loadNowPlaying = function(container, track) {
+  exports.t = container;
+  var festivalInfo = getFestivalInfo(track);
+  var nowPlaying = $(templates["player"].nowPlaying({ image: track.image, artist: track.artists[0].name, title: track.name }));
+  console.dir(nowPlaying);
+  container.html(nowPlaying);
+}
+var loadPlayer = function(container) {
+  var player = $(templates["player"].player());
+  var track = getNextTrack();
+  loadNowPlaying($(".now-playing-container", player), track);
+  $(".play-button", player).click(function() {
+    models.player.play(track);
+    return false;
+  });
+  container.html(player);
+}
 
 exports.init = function () {
   
@@ -12,6 +47,8 @@ exports.init = function () {
   sp.require("scripts/jquery-ui-1.8.21.custom.min");
   sp.require("scripts/less-1.3.0.min");
   var slab = sp.require("scripts/slab").slab;
+  models = sp.require('sp://import/scripts/api/models');
+  exports.models = models;
   
   $(function() {
   
@@ -21,6 +58,10 @@ exports.init = function () {
     $.when.apply($, defs).done(function() {
       var layout = $(templates["layout"].main());
       $("body").append(layout);
+      tempPlaylist = models.Playlist.fromURI("spotify:user:wayoutwestfestival:playlist:1VkQ6nbfU4gKjsPjqwE2kZ");
+      exports.playlist = tempPlaylist;
+      //models.player.play(playlist.tracks[0]);
+      loadPlayer($(".player-container", layout));
     });
     
   });
