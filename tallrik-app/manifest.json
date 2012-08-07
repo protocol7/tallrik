@@ -18,12 +18,12 @@
 	},
 	"RequiredPermissions": [
 		"https://graph.facebook.com",
-		"http://localhost:9999",
+		"http://172.21.113.142:9999",
 		"https://fbcdn-profile-*.akamaihd.net",
 		"http://*.fbcdn.net",
 		"http://*.cloudfront.net",
 		"http://*.spotify.com",
-		"http://apps.wayoutwest.se"
+		"http://*.wayoutwest.se"
 	],
 	"AcceptedLinkTypes": [
 		"playlist",

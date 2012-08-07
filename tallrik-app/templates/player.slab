@@ -1,5 +1,13 @@
-﻿{slab player}
+﻿﻿{slab player}
 <div class="player">
+	<div class="perform-settings">Performing: 
+		<ul>
+		<li class="perform-soon">Next X hours</li> |
+		<li class="perform-thursday">Thursday</li> |
+		<li class="perform-friday">Friday</li> |
+		<li class="perform-saturday">Saturday</li>
+		</ul>
+	</div>
 	<div class="now-playing-container"></div>
 	<div class="control-buttons"><a href="#" class="play-button">►</a><a href="#" class="skip-button">►►</a></div>
 	<div class="tuner-container"></div>
@@ -10,13 +18,16 @@
 <div class="now-playing">
 	<div class="scene-info">On <div class="emp">{scene}</div> in <div class="emp">{due}</div>:</div>
 	<div class="border"></div>
-	<div class="content">
-		<div class="background" style="background: url('{image2}') center center"></div>
-		<div class="background-dimmer"></div>
-		<img src="{image}" class='track-image'>
-	</div>
+	<div class="image-container"></div>
 	<div class="border"></div>
 	<a href="{artistUri}" class='artist'>{artist}</a>
 	<div class='title'>{title}</div>
+</div>
+{endslab}
+{slab nowPlayingImage}
+<div class="now-playing-image">
+	<div class="background" style="background: url('{image2}') center center"></div>
+	<div class="background-dimmer"></div>
+	<img src="{image}" class='track-image'>
 </div>
 {endslab}
