@@ -2,6 +2,7 @@
 <div class="player">
 	<div class="now-playing-container"></div>
 	<a href="#" class="play-button">►</a>
+	<div class="tuner-container"></div>
 </div>
 {endslab}
 {slab nowPlaying}

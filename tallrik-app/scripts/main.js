@@ -3,7 +3,8 @@ var sp = getSpotifyApi(1);
 
 var templates = {
   "layout": null,
-  "player": null
+  "player": null,
+  "tuner": null
 };
 
 var models;
@@ -27,6 +28,11 @@ var getFestivalInfo = function(track) {
     endTime: artist.gig_end,
     due: getDueTime(artist.gig_start)
   }
+}
+
+var loadTuner = function(container) {
+  var tuner = $(templates["tuner"].main());
+  container.html(tuner);
 }
 
 var getDueTime = function(startTime) {
@@ -63,6 +69,7 @@ var loadPlayer = function(container) {
     models.player.play(track);
     return false;
   });
+  loadTuner($(".tuner-container", player));
   container.html(player);
 }
 
@@ -99,8 +106,6 @@ exports.init = function () {
     }).error(function() { alert("Error loading venue data."); }));
 	
     $.when.apply($, defs).done(function() {
-      $("body").css("background", "url('img/background.jpg')");
-      $("body").css("background-size", "100%");
       var layout = $(templates["layout"].main());
       $("body").append(layout);
       tempPlaylist = models.Playlist.fromURI("spotify:user:wayoutwestfestival:playlist:1VkQ6nbfU4gKjsPjqwE2kZ");
