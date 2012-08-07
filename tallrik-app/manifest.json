@@ -21,7 +21,8 @@
 		"https://fbcdn-profile-*.akamaihd.net",
 		"http://*.fbcdn.net",
 		"http://*.cloudfront.net",
-		"http://*.spotify.com"
+		"http://*.spotify.com",
+		"http://apps.wayoutwest.se"
 	],
 	"AcceptedLinkTypes": [
 		"playlist",

@@ -7,18 +7,45 @@ var templates = {
 };
 
 var models;
+var artists;
+var venues;
 
 var tempPlaylist = undefined;
 var getNextTrack = function() {
-  // Replace with code that looks up which artists are playing the nearest hours and get a random track by one of those artists and return it
+  // Replace with code that looks up which artists are playing the nearest hours and get a 
+  // random track by one of those artists and return it
   return tempPlaylist.tracks[Math.floor(Math.random()*tempPlaylist.length)];
 }
 
 var getFestivalInfo = function(track) {
+  var artistName = track.data.artists[0].name.toLowerCase();
+  var artist = artists[artistName];
+  
   return {
-    scene: "Azalea",
-    due: "2 hours"
+    scene: venues[artist.venueID],
+    startTime: artist.gig_start,
+    endTime: artist.gig_end,
+    due: getDueTime(artist.gig_start)
   }
+}
+
+var getDueTime = function(startTime) {
+  var currentTime = new Date();
+  var msDifference = new Date(startTime) - currentTime;
+  var minutesLeft = Math.floor(msDifference / (1000 * 60)); // ms to even minutes
+  
+  var returnString = '';
+  if (minutesLeft >= 60) {
+    var hoursLeft = Math.floor(minutesLeft / 60);
+    var minutePart = minutesLeft - hoursLeft * 60;
+    returnString = hoursLeft + ' hours ' + (minutePart > 0 ? minutePart + ' minutes' : '');
+  } else if (minutesLeft > 0) {
+    returnString = minutesLeft + ' minutes';
+  }
+  else {
+    returnString = 'the future. Hopefully.';
+  }
+  return returnString;
 }
 
 var loadNowPlaying = function(container, track) {
@@ -27,6 +54,7 @@ var loadNowPlaying = function(container, track) {
   var nowPlaying = $(templates["player"].nowPlaying({ image: track.image, artist: track.artists[0].name, title: track.name, scene: festivalInfo.scene, due: festivalInfo.due }));
   container.html(nowPlaying);
 }
+
 var loadPlayer = function(container) {
   var player = $(templates["player"].player());
   var track = getNextTrack();
@@ -51,7 +79,25 @@ exports.init = function () {
   
     var t = templates;
     templates = {};
+	
     var defs = $.map(t, function(_, k) { return $.get("templates/" + k + ".slab", function(data) { templates[k] = slab.compile(data); }) });
+	defs.push($.get('http://apps.wayoutwest.se/wow-phone-app/2012/desktop/artists.php', function(data) {
+      artists = {};
+      $.map(data, function(a, _) {
+        artists[a.title.toLowerCase()] = {
+          gig_start: a.gig_start,
+          gig_end: a.gig_end,
+          venueID: a.venueID
+        };
+      });
+    }).error(function() { alert("Error loading artist data."); }));
+    defs.push($.get('http://apps.wayoutwest.se/wow-phone-app/2012/desktop/venues.php', function(data) {
+      venues = new Array;
+      $.map(data.result, function(v, _) {
+        venues[v.ID] = v.title; 
+      });
+    }).error(function() { alert("Error loading venue data."); }));
+	
     $.when.apply($, defs).done(function() {
       $("body").css("background", "url('img/background.jpg')");
       $("body").css("background-size", "100%");
