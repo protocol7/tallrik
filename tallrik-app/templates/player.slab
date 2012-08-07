@@ -1,9 +1,20 @@
-{slab player}
+﻿{slab player}
 <div class="player">
 	<div class="now-playing-container"></div>
-	<a href="#" class="play-button">Play</a>
+	<a href="#" class="play-button">►</a>
 </div>
 {endslab}
 {slab nowPlaying}
-<div class="now-playing"><img src="{image}">{artist} - {title}</div>
+<div class="now-playing">
+	<div class="scene-info">On {scene} in {due}:</div>
+	<div class="border"></div>
+	<div class="content">
+		<div class="background" style="background: url('{image}') center center"></div>
+		<div class="background-dimmer"></div>
+		<img src="{image}" class='track-image'>
+	</div>
+	<div class="border"></div>
+	<div class='artist'>{artist}</div>
+	<div class='title'>{title}</div>
+</div>
 {endslab}

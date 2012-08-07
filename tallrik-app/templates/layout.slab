@@ -1,3 +1,5 @@
 {slab main}
-<div class="layout"><div class="player-container"></div></div>
+<div class="layout">
+<div class="header"><img src="img/head.png"><div class="sub-title">Festival radio</div></div>
+<div class="player-container"></div></div>
 {endslab}

@@ -8,26 +8,23 @@ var templates = {
 
 var models;
 
-var i=0;
 var tempPlaylist = undefined;
 var getNextTrack = function() {
   // Replace with code that looks up which artists are playing the nearest hours and get a random track by one of those artists and return it
-  return exports.playlist.tracks[i++];
+  return tempPlaylist.tracks[Math.floor(Math.random()*tempPlaylist.length)];
 }
 
 var getFestivalInfo = function(track) {
   return {
     scene: "Azalea",
-    startTime: "17:30",
-    endTime: "19:00"
+    due: "2 hours"
   }
 }
 
 var loadNowPlaying = function(container, track) {
   exports.t = container;
   var festivalInfo = getFestivalInfo(track);
-  var nowPlaying = $(templates["player"].nowPlaying({ image: track.image, artist: track.artists[0].name, title: track.name }));
-  console.dir(nowPlaying);
+  var nowPlaying = $(templates["player"].nowPlaying({ image: track.image, artist: track.artists[0].name, title: track.name, scene: festivalInfo.scene, due: festivalInfo.due }));
   container.html(nowPlaying);
 }
 var loadPlayer = function(container) {
@@ -56,6 +53,8 @@ exports.init = function () {
     templates = {};
     var defs = $.map(t, function(_, k) { return $.get("templates/" + k + ".slab", function(data) { templates[k] = slab.compile(data); }) });
     $.when.apply($, defs).done(function() {
+      $("body").css("background", "url('img/background.jpg')");
+      $("body").css("background-size", "100%");
       var layout = $(templates["layout"].main());
       $("body").append(layout);
       tempPlaylist = models.Playlist.fromURI("spotify:user:wayoutwestfestival:playlist:1VkQ6nbfU4gKjsPjqwE2kZ");
