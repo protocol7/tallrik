@@ -103,7 +103,7 @@ public class ApiServlet extends HttpServlet {
   @Override
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    System.out.println("POST " + req.getRequestURI());
+    System.out.println("DELETE " + req.getRequestURI());
 
     Matcher uriMatcher = USERNAME_PATTERN.matcher(req.getRequestURI());
     if(uriMatcher.matches()) {
