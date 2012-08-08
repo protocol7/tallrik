@@ -8,8 +8,7 @@
 		<li data-selection="thursday">Thursday</li> |
 		<li data-selection="friday">Friday</li> |
 		<li data-selection="saturday">Saturday</li> |
-		<li data-selection="all">All</li>
-		<li data-selection="saturday">Saturday</li> |
+		<li data-selection="all">All</li> |
 		<li data-selection="recommended">Recommended artists</li>
 		</ul>
 	</div>

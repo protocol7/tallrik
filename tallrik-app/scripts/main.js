@@ -37,8 +37,8 @@ var getNextTrack = function(callback) {
   } else if(sel == "saturday") {
     artistsSel = getArtistsInTimespan("2012-08-11 08:00", "2012-08-12 08:00");
   } else if(sel == "recommended") {
-	var selectedArtists = $.map(recommendedArtists.artists.slice(0, 5), function(a) { return a.name; });
-    artists = selectedArtists;
+    var selectedArtists = $.map(recommendedArtists.artists.slice(0, 5), function(a) { return a.name; });
+    artistsSel = selectedArtists;
   }
   var artist = artistsSel[Math.floor(Math.random()*artistsSel.length)];
   getTopTrackForArtist(artist, function(tracks) {
