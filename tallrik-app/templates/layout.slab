@@ -6,7 +6,12 @@
 		<div class="background-fader"></div>
 	</div>
 </div>
-<div class="header"><img src="img/head.png"><div class="sub-title">Festival radio</div></div>
+<div class="header">
+	<img src="img/head.png">
+	<div class="sub-title">
+		<div class="line"></div>LINE-UP RADIO<div class="line"></div>
+	</div>
+</div>
 <div class="player-container"></div>
 </div>
 {endslab}

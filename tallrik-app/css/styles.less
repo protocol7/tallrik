@@ -41,9 +41,19 @@ body {
 		margin-top: 10px;
 	}
 	.sub-title {
-		font-size: 25px;
+		font-size: 20px;
 		height: 30px;
 		margin-bottom: 5px;
+		letter-spacing: 3px;
+		.line {
+			width: 30px;
+			height: 3px;
+			background: #333333;
+			display: inline-block;
+			margin-bottom: 5px;
+			margin-left: 20px;
+			margin-right: 20px;
+		}
 	}
 }
 
@@ -61,12 +71,12 @@ body {
 		height: 5px;
 	}
 	.artist-selection {
-		color: #555555;
-		text-align: left;
+		color: #777777;
+		text-align: center;
 		font-size: 14px;
 		margin-bottom: 20px;
 		border-radius: 5px;
-		background: rgba(0, 0, 0, 0.2);
+		//background: rgba(0, 0, 0, 0.2);
 		padding: 5px;
 		ul {
 			display: inline-block;
@@ -78,7 +88,7 @@ body {
 				cursor: pointer;
 				&.ui-selected {
 					font-weight: bold;
-					color: #000000;
+					color: #333333;
 				}
 			}
 		}
