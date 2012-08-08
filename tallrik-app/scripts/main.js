@@ -1,6 +1,6 @@
 ﻿﻿var sp = getSpotifyApi(1);
 
-var server = 'http://172.21.113.142:9999/';
+var server = 'http://localhost:9999/';
 
 var templates = {
   "layout": null,
