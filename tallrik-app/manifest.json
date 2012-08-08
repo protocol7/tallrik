@@ -1,8 +1,8 @@
 {
 	"BundleType": "Application",
-	"BundleIdentifier": "tallrik",
+	"BundleIdentifier": "wowlineupradio",
 	"AppName": {
-		"en": "Tallrik"
+		"en": "WOW Line-up Radio"
 	},
 	"SupportedLanguages": [
 		"en"
@@ -10,7 +10,7 @@
 	"Dependencies": {
 		"api": "0.1.0"
 	},
-	"UserInstallable": false,
+	"UserInstallable": true,
 	"ApiPermissions": {
 		"core" : ["private"],
 		"social" : ["private"],
