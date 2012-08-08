@@ -215,7 +215,7 @@ public class ArtistsGraph {
     }
   }
 
-  private Path findShortestPath(Node node1, Node node2) {
+  protected Path findShortestPath(Node node1, Node node2) {
     PathFinder<Path> pathFinder = GraphAlgoFactory.shortestPath(
       Traversal.expanderForTypes( TallrikRelTypes.SIMILAR, Direction.BOTH ), 5, 1);
 
@@ -244,6 +244,24 @@ public class ArtistsGraph {
       // TODO add?
       return Collections.emptyList();
     }
+  }
+
+  public void deleteUser(User user) {
+    Transaction tx = graphDb.beginTx();
+
+    try {
+      Node node = findUserNodeByName(user.getUsername());
+
+      if(node != null) {
+        node.delete();
+      }
+
+      tx.success();
+    } finally {
+      tx.finish();
+    }
+
+
   }
 
   public void dump() {

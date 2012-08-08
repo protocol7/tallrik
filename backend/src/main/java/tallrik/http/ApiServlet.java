@@ -97,4 +97,21 @@ public class ApiServlet extends HttpServlet {
       }
     }
   }
+
+  @Override
+  protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    System.out.println("POST " + req.getRequestURI());
+
+    Matcher uriMatcher = USERNAME_PATTERN.matcher(req.getRequestURI());
+    if(uriMatcher.matches()) {
+      String username = uriMatcher.group(1);
+
+      graph.deleteUser(new User(username));
+    } else {
+      resp.sendError(404);
+    }
+  }
 }
+
+
