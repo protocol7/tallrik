@@ -1,12 +1,28 @@
 Code from our #wowhack
 
-
 Score service API
-* HTTP GET /<username>
+-----------------
+* Get recommended WoW artists for the user
+  `HTTP GET /<username>`
   Returns 200 and a scored list of WoW artists:
-  {"artists": [
+  `{"artists": [
     {"name": "Refused", "score": 123}
-  ]}
+  ]}`
 
-* HTTP POST /<username>/<artist name>/<score type>
-  Returns 200
+* Add user favorite artists
+  `HTTP POST /<username>`
+  Data:
+  `{"artists": [
+      {"name": "Refused"}
+    ]
+  }`
+  Returns 200 on success
+
+* Delete all the users favorites
+  `HTTP DELETE /<username>`
+  Returns 200 on success
+
+
+Schedule hack
+-------------
+Run a web server, e.g. `python -m SimpleHTTPServer` in the schedule directory
