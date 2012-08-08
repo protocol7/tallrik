@@ -2,5 +2,6 @@
 <div class="tuner">
 	<div class="title">Tune the radio with your music!</div>
 	<div class="dropper">Drop a playlist with your favorite music here</div>
+	<a href="#" class="clear">(Clear)</a>
 </div>
 {endslab}

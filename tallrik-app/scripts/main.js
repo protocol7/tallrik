@@ -114,11 +114,16 @@ var loadTuner = function(container) {
     $(this).removeClass("dragover");
     return false;
   });
+  var loadRecommended = function() {
+    $.getJSON(server + sp.core.user.canonicalUsername, function(data) {
+      recommendedArtists = data;
+      loadRecommendedArtists($(".recommended-artists-container", $(".player")))
+    });
+  };
   dropPlaylistArea.bind("drop", function(e) {
     e.stopPropagation();
     e.preventDefault();
     $(this).removeClass("dragover");
-    // Drop stuff
     var droppedURL = e.originalEvent.dataTransfer.getData("text")
 
     if(droppedURL.indexOf("playlist") == -1) {
@@ -143,16 +148,28 @@ var loadTuner = function(container) {
         contentType: "application/json",
         type: "POST",
         success:function(a) {
-          // reload recommended artists
-          $.getJSON(server + sp.core.user.canonicalUsername, function(data) {
-            recommendedArtists = data;
-            loadRecommendedArtists($(".recommended-artists-container", $(".player")))
-          })
+          loadRecommended();
+          $(".artist-selection li").removeClass("ui-selected");
+          $(".artist-selection li[data-selection='recommended']").addClass("ui-selected");
         },
         error:function() { console.log("Failed to upload favorite artists")}
       });
     });
 
+    return false;
+  });
+  $(".clear", tuner).click(function() {
+    $.ajax({
+      url: server + sp.core.user.canonicalUsername,
+      data: "",
+      processData: false,
+      contentType: "application/json",
+      type: "DELETE",
+      success:function(a) {
+        loadRecommended();
+      },
+      error:function() { console.log("Failed to upload favorite artists")}
+    });
     return false;
   });
   container.html(tuner);
