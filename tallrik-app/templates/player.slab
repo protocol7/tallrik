@@ -2,7 +2,8 @@
 <div class="player">
 	<div class="artist-selection">Selection: 
 		<ul>
-		<li data-selection="thursday" class="ui-selected">Thursday</li> |
+		<li data-selection="soon" class="ui-selected">Soon</li> |
+		<li data-selection="thursday">Thursday</li> |
 		<li data-selection="friday">Friday</li> |
 		<li data-selection="saturday">Saturday</li>
 		</ul>

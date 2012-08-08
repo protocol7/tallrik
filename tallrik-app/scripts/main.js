@@ -19,7 +19,16 @@ var tempPlaylist = undefined;
 var getNextTrack = function(callback) {
   var sel = $(".artist-selection .ui-selected").data("selection");
   var artists;
-  if(sel == "thursday" || sel == undefined) {
+  if(sel == "soon" || sel == undefined) {
+    var h = 2;
+    artists = [];
+    while(artists.length < 10) {
+      var t = new Date();
+      t.setHours(t.getHours() + h);
+      artists = getArtistsInTimespan(new Date(), t);
+      h++;
+    }
+  } else if(sel == "thursday" || sel == undefined) {
     artists = getArtistsInTimespan("2012-08-09 08:00", "2012-08-10 08:00");
   } else if(sel == "friday") {
     artists = getArtistsInTimespan("2012-08-10 08:00", "2012-08-11 08:00");
