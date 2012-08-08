@@ -253,6 +253,12 @@ public class ArtistsGraph {
       Node node = findUserNodeByName(user.getUsername());
 
       if(node != null) {
+        for(Relationship rel : node.getRelationships()) {
+          rel.delete();
+        }
+
+        usersByNameIndex.remove(node);
+
         node.delete();
       }
 
