@@ -38,8 +38,21 @@ var getNextTrack = function(callback) {
   });
 }
 
+var getNextTracks = function(count, callback) {
+  var tracks = [];
+  var f;
+  f = function() {
+    getNextTrack(function(track) {
+      tracks.push(track);
+      if(tracks.length == count) callback(tracks);
+      else f();
+    });
+  };
+  f();
+}
+
 var getTopTrackForArtist = function(artistName, callback) {
-  var search = new models.Search(artistName);
+  var search = new models.Search("artist:" + artistName);
   search.localResults = models.LOCALSEARCHRESULTS.APPEND;
   search.observe(models.EVENT.CHANGE, function() {
     callback(search.tracks);
@@ -183,17 +196,17 @@ var loadPlayer = function(container) {
   var playerPlaylist = new models.Playlist();
   
   var refreshTracks = function(callback) {
-    for(var i=playerPlaylist.length - 1; i >= 0; i--) {
-      if(models.player.track != null && models.player.track.uri != playerPlaylist.tracks[i].uri) {
-        playerPlaylist.remove(playerPlaylist.tracks[i]);
-      }
+    var ts = playerPlaylist.tracks.map(function(t) { return t.uri; });
+    for(var i=0; i < ts.length; i++) {
+      if(models.player.track == null || models.player.track.uri != ts[i])
+        playerPlaylist.remove(ts[i]);
     }
-    if(playerPlaylist.length < 2) {
-      getNextTrack(function(track) {
+    getNextTracks(2 - playerPlaylist.length, function(tracks) {
+      tracks.forEach(function(track) {
         playerPlaylist.add(track);
-        callback();
       });
-    } else { callback(); }
+      callback();
+    });
   }
   
   $(".play-button", player).click(function() {
@@ -205,7 +218,11 @@ var loadPlayer = function(container) {
       models.player.next();
     return false;
   });
-  $(".artist-selection ul", player).selectable();
+  $(".artist-selection ul", player).selectable({
+    selected: function() {
+      refreshTracks();
+    }
+  });
       
   container.empty();
   container.append(player);
