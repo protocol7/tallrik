@@ -9,7 +9,7 @@
 		<li data-selection="friday">Friday</li> |
 		<li data-selection="saturday">Saturday</li> |
 		<li data-selection="all">All</li> |
-		<li data-selection="recommended">Tuned artists</li>
+		<li data-selection="recommended" class="disabled">Tuned artists</li>
 		</ul>
 	</div>
 	<div class="tuner-container"></div>

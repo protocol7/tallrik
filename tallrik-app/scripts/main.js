@@ -103,7 +103,6 @@ var getArtistsInTimespan = function(startTime, endTime) {
 var loadTuner = function(container) {
   var tuner = $(templates["tuner"].main());
   var dropPlaylistArea = $(".dropper", tuner);
-  $(".artist-selection li[data-selection='recommended']").addClass("disabled");
   dropPlaylistArea.bind("dragover", function(e) {
     e.preventDefault();
     $(this).addClass("dragover");
@@ -294,10 +293,8 @@ var loadPlayer = function(container) {
 }
 
 var loadRecommendedArtists = function(container) {
-  if(recommendedArtists == undefined || recommendedArtists.length == 0)
-    $(".artist-selection li[data-selection='recommended']").addClass("disabled");
-  else
-    $(".artist-selection li[data-selection='recommended']").removeClass("disabled");
+  $(".artist-selection li[data-selection='recommended']").toggleClass("disabled",
+    recommendedArtists == undefined || recommendedArtists.artists.length == 0);
   if(recommendedArtists == undefined) return;
   var recArtistsNames = recommendedArtists.artists.slice(0, 5);
   var html = $(templates["artists"].artists({"artists": recArtistsNames}));
