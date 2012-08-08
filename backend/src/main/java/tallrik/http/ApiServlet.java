@@ -39,6 +39,8 @@ public class ApiServlet extends HttpServlet {
 
     Matcher uriMatcher = USERNAME_PATTERN.matcher(req.getRequestURI());
     if(uriMatcher.matches()) {
+      resp.addHeader("Access-Control-Allow-Origin", "*");
+
       String username = uriMatcher.group(1);
 
       System.out.println("Getting wow artists for " + username);
