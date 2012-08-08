@@ -18,27 +18,29 @@ var trackToArtists = {}
 var tempPlaylist = undefined;
 var getNextTrack = function(callback) {
   var sel = $(".artist-selection .ui-selected").data("selection");
-  var artists;
+  var artistsSel;
   if(sel == "soon" || sel == undefined) {
     var h = 2;
-    artists = [];
-    while(artists.length < 10) {
+    artistsSel = [];
+    while(artistsSel.length < 10) {
       var t = new Date();
       t.setHours(t.getHours() + h);
-      artists = getArtistsInTimespan(new Date(), t);
+      artistsSel = getArtistsInTimespan(new Date(), t);
       h++;
     }
-  } else if(sel == "thursday" || sel == undefined) {
-    artists = getArtistsInTimespan("2012-08-09 08:00", "2012-08-10 08:00");
+  } else if(sel == "all") {
+    artistsSel = $.map(artists, function(_, a) { return a; });
+  } else if(sel == "thursday") {
+    artistsSel = getArtistsInTimespan("2012-08-09 08:00", "2012-08-10 08:00");
   } else if(sel == "friday") {
-    artists = getArtistsInTimespan("2012-08-10 08:00", "2012-08-11 08:00");
+    artistsSel = getArtistsInTimespan("2012-08-10 08:00", "2012-08-11 08:00");
   } else if(sel == "saturday") {
-    artists = getArtistsInTimespan("2012-08-11 08:00", "2012-08-12 08:00");
+    artistsSel = getArtistsInTimespan("2012-08-11 08:00", "2012-08-12 08:00");
   } else if(sel == "recommended") {
 	var selectedArtists = $.map(recommendedArtists.artists.slice(0, 5), function(a) { return a.name; });
     artists = selectedArtists;
   }
-  var artist = artists[Math.floor(Math.random()*artists.length)];
+  var artist = artistsSel[Math.floor(Math.random()*artistsSel.length)];
   getTopTrackForArtist(artist, function(tracks) {
     if(tracks.length == 0) {
       getNextTrack(callback);

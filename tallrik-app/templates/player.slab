@@ -1,16 +1,18 @@
 ﻿﻿{slab player}
 <div class="player">
+	<div class="now-playing-container"></div>
+	<div class="control-buttons"><a href="#" class="play-button">►</a><a href="#" class="skip-button">►►</a></div>
 	<div class="artist-selection">Selection: 
 		<ul>
 		<li data-selection="soon" class="ui-selected">Soon</li> |
 		<li data-selection="thursday">Thursday</li> |
 		<li data-selection="friday">Friday</li> |
 		<li data-selection="saturday">Saturday</li> |
+		<li data-selection="all">All</li>
+		<li data-selection="saturday">Saturday</li> |
 		<li data-selection="recommended">Recommended artists</li>
 		</ul>
 	</div>
-	<div class="now-playing-container"></div>
-	<div class="control-buttons"><a href="#" class="play-button">►</a><a href="#" class="skip-button">►►</a></div>
 	<div class="tuner-container"></div>
   <div class="recommended-artists-container"></div>
 </div>
