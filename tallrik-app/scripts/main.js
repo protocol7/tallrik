@@ -304,6 +304,10 @@ var loadRecommendedArtists = function(container) {
 
       var search = new models.Search("artist:" + artist.name, {"pageSize": 1, "searchAlbums": false, "searchTracks": false, "searchPlaylists": false})
       search.observe(models.EVENT.CHANGE, function() {
+        if(search.artists.length == 0) {
+          $(div).remove()
+        }
+
         search.artists.forEach(function(a) {
           $(".rec-artist-name", div).text(a.data.name)
           $("img", div).css("background-image", "url(" + a.data.portrait + ")")
