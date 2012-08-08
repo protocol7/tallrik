@@ -1,4 +1,4 @@
-﻿var sp = getSpotifyApi(1);
+﻿﻿var sp = getSpotifyApi(1);
 
 var server = 'http://172.21.113.142:9999/';
 
@@ -34,6 +34,9 @@ var getNextTrack = function(callback) {
     artists = getArtistsInTimespan("2012-08-10 08:00", "2012-08-11 08:00");
   } else if(sel == "saturday") {
     artists = getArtistsInTimespan("2012-08-11 08:00", "2012-08-12 08:00");
+  } else if(sel == "recommended") {
+	var selectedArtists = $.map(recommendedArtists.artists.slice(0, 5), function(a) { return a.name; });
+    artists = selectedArtists;
   }
   var artist = artists[Math.floor(Math.random()*artists.length)];
   getTopTrackForArtist(artist, function(tracks) {
@@ -258,8 +261,9 @@ var loadPlayer = function(container) {
   $.getJSON(server + sp.core.user.canonicalUsername, function(data) {
     recommendedArtists = data;
     loadRecommendedArtists($(".recommended-artists-container", player));
-  }).error(function(e) { 
-    console.log("Error: " + e);
+  }).error(function(e) {
+	console.log("Error: ");
+	console.dir(e);
   });
 }
 

@@ -5,7 +5,8 @@
 		<li data-selection="soon" class="ui-selected">Soon</li> |
 		<li data-selection="thursday">Thursday</li> |
 		<li data-selection="friday">Friday</li> |
-		<li data-selection="saturday">Saturday</li>
+		<li data-selection="saturday">Saturday</li> |
+		<li data-selection="recommended">Recommended artists</li>
 		</ul>
 	</div>
 	<div class="now-playing-container"></div>
