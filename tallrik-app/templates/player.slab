@@ -18,7 +18,7 @@
 {endslab}
 {slab nowPlaying}
 <div class="now-playing">
-	<div class="scene-info">On <div class="emp">{scene}</div> in <div class="emp">{due}</div>:</div>
+	<div class="scene-info">On <div class="emp">{scene}</div> in <div class="emp">{due}</div>:<div class="playing-date">{date}</div></div>
 	<div class="border"></div>
 	<div class="image-container"></div>
 	<div class="border"></div>

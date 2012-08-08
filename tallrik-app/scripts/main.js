@@ -194,18 +194,24 @@ var getDueTime = function(startTime) {
   return returnString;
 }
 
+var padNumber = function(d) {
+  if(d < 10) return "0" + d;
+  else return d;
+}
+
 var loadNowPlaying = function(container, track) {
   exports.t = container;
   var festivalInfo = getFestivalInfo(track);
   if(festivalInfo == undefined) container.html("Cannot find '" + track.artists[0].name + "' in festival schema");
   else {
-    
+      var date = new Date(festivalInfo.startTime);
       var nowPlaying = $(templates["player"].nowPlaying({ 
         artist: trackToArtists[track.uri],
         artistUri: track.artists[0].uri,
         title: track.name,
         scene: festivalInfo.scene, 
-        due: festivalInfo.due 
+        due: festivalInfo.due,
+        date: $.datepicker.formatDate("DD ", date) + date.getHours() + ":" + padNumber(date.getMinutes())
       }));
       
       $.get(festivalInfo.artist.wow_URL, function(data) {
