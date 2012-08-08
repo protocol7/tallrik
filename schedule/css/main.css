@@ -1,0 +1,11 @@
+.fc-widget-header, .fc-widget-content {
+  border: none;
+}
+.fc-agenda-slots tr.fc-minor th, .fc-agenda-slots tr.fc-minor td {
+  border: none;
+}
+
+.calendar {
+  width: 300px;
+  display: inline-block;
+}
