@@ -3,9 +3,9 @@ Code from our #wowhack
 Spotify app
 -----------
 
-You need to a Spotify app developer to load the app locally. If you are,
+You need to be a Spotify app developer to load the app locally. If you are,
 softlink the tallrik-app directory to your ~/Spotify or ~/My documents/Spotify
-and open the app in Spotify using the URI `spotify:app:tallrik`.
+and open the app in Spotify using the URI `spotify:app:wowlineupradio`.
 
 For full functionality it needs the score service running on localhost. See
 below for details.
